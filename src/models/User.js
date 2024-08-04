@@ -3,8 +3,8 @@
 const User = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
-      type: DataTypes.INTEGER,
       primaryKey: true,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
     },
