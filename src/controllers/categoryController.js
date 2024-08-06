@@ -1,4 +1,5 @@
 const categoryService = require('../services/categoryService');
+const { Category } = require('../models');
 
 const validateCategoryName = (name) => {
   if (!name) {
@@ -25,6 +26,19 @@ const createCategory = async (req, res) => {
   }
 };
 
+const getAllCategories = async (_req, res) => {
+  try {
+    const categories = await Category.findAll({
+      attributes: ['id', 'name'],
+    });
+    return res.status(200).json(categories);
+  } catch (error) {
+    console.error('Error fetching categories:', error.message);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createCategory,
+  getAllCategories,
 };
