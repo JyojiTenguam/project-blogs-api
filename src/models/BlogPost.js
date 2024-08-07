@@ -7,7 +7,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       title: DataTypes.STRING,
       content: DataTypes.STRING,
-      userId: DataTypes.STRING,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        field: 'user_id',
+      },
       published:{ 
         defaultValue: DataTypes.NOW,
         type:DataTypes.DATE,
@@ -22,10 +30,17 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
   });
   BlogPost.associate = (models) => {
-      BlogPost.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'User',
-      });
-    };
+    BlogPost.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+    });
+
+    BlogPost.belongsToMany(models.Category, {
+      through: models.PostCategory,
+      foreignKey: 'postId',
+      otherKey: 'categoryId',
+      as: 'category',
+    });
+  };
   return BlogPost;
 };
