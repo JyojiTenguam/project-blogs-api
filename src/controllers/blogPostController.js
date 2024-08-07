@@ -1,5 +1,6 @@
 const postService = require('../services/blogPostService');
-const { BlogPost, User, Category } = require('../models');
+const { BlogPost } = require('../models');
+const includeOptions = require('../utils/includeOptions');
 
 const validatePost = (title, content, categoryIds) => {
   if (!title || !content || !categoryIds) {
@@ -29,20 +30,6 @@ const postBlog = async (req, res) => {
   }
 };
 
-const includeOptions = [
-  {
-    model: User,
-    as: 'user',
-    attributes: ['id', 'displayName', 'email', 'image'],
-  },
-  {
-    model: Category,
-    as: 'categories',
-    through: { attributes: [] },
-    attributes: ['id', 'name'],
-  },
-];
-
 const getAllPosts = async (_req, res) => {
   try {
     const posts = await BlogPost.findAll({ include: includeOptions });
@@ -52,7 +39,19 @@ const getAllPosts = async (_req, res) => {
   }
 };
 
+const getPostById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await BlogPost.findByPk(id, { include: includeOptions });
+    if (!post) return res.status(404).json({ message: 'Post does not exist' });
+    return res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   postBlog,
   getAllPosts,
+  getPostById,
 };

@@ -22,6 +22,7 @@ app.post('/categories', authMiddleware, categoryController.createCategory);
 app.get('/categories', authMiddleware, categoryController.getAllCategories);
 app.post('/post', authMiddleware, postController.postBlog);
 app.get('/post', authMiddleware, postController.getAllPosts);
+app.get('/post/:id', authMiddleware, postController.getPostById);
 
 // É importante exportar a constante `app`,
 // para que possa ser utilizada pelo arquivo `src/server.js`
